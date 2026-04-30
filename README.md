@@ -1,32 +1,166 @@
-# ProView AI — Production Deployment Guide
+<div align="center">
 
-AI-powered interview training platform built with React 19, TanStack Start, Supabase, and Cloudflare Workers.
+# 🧠 ProView AI
 
-## What Changed From Lovable Export
+### AI-Powered Interview Training Platform
 
-| File | Change |
-|------|--------|
-| `vite.config.ts` | Replaced `@lovable.dev/vite-tanstack-config` with standard Vite plugins |
-| `package.json` | Removed `@lovable.dev/vite-tanstack-config`, added `wrangler` devDep |
-| `superbase/functions/interview-chat/index.ts` | Replaced Lovable AI gateway → Google Gemini API |
-| `superbase/functions/interview-feedback/index.ts` | Replaced Lovable AI gateway → Google Gemini API |
-| `wrangler.jsonc` | Updated project name to `proview-ai` |
-| `.env.example` | Added with clear instructions |
-| `public/robots.txt` | Added for SEO |
-| `public/sitemap.xml` | Added for SEO |
+Practice aptitude tests and AI-led mock interviews. Get instant, personalized feedback — before the real recruiter does.
 
----
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Pages-F38020?style=flat-square&logo=cloudflare)](https://pages.cloudflare.com)
+[![TanStack](https://img.shields.io/badge/TanStack-Start-FF4154?style=flat-square)](https://tanstack.com/start)
 
-## Prerequisites
 
-- Node.js 18+ (or Bun)
-- A [Supabase](https://supabase.com) account (free tier works)
-- A [Google AI Studio](https://aistudio.google.com) API key (free tier works)
-- A [Cloudflare](https://cloudflare.com) account (free tier works) — OR Vercel/Netlify
+</div>
 
 ---
 
-## Step 1: Install Dependencies
+## 🎯 About the Project
+
+Preparing for interviews is often unstructured — candidates practice randomly without knowing what actually needs improvement.
+
+**ProView AI** solves this by simulating a real hiring pipeline:
+
+- **Round 1 — Aptitude Test**  
+  Timed MCQs across Aptitude, Reasoning, and Programming with instant evaluation.
+
+- **Round 2 — AI Mock Interview**  
+  A conversational AI interviewer that asks questions, listens to responses, and adapts dynamically.
+
+After each session, users receive a **structured feedback report** covering:
+- Communication
+- Technical depth
+- Confidence
+- Keyword relevance
+- Clarity
+
+The goal is simple:  
+> Turn practice into measurable improvement.
+
+---
+
+## ✨ Key Features
+
+- 🔐 **Authentication** — Secure login via Supabase Auth  
+- 🧪 **Aptitude Tests** — Timed MCQs with auto-submit and scoring  
+- 🤖 **AI Interviewer** — Real-time conversational interview (Gemini API)  
+- 🎤 **Voice Input** — Answer hands-free using speech recognition  
+- 🔊 **Text-to-Speech** — Interviewer speaks back to the user  
+- 📷 **Confidence Detection** — Webcam-based facial analysis  
+- 📊 **Feedback Reports** — Detailed scoring + improvement suggestions  
+- 📈 **Progress Tracking** — Performance trends over time  
+- 👤 **User Profile** — Avatar + personal details  
+- 📱 **Responsive Design** — Works across devices  
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- React 19  
+- TypeScript  
+- TanStack Start (SSR + routing)  
+- TanStack Query  
+- Tailwind CSS  
+- shadcn/ui  
+- Recharts  
+
+### Backend & Infrastructure
+- Supabase (PostgreSQL + Auth + Storage + Edge Functions)  
+- Google Gemini 2.0 Flash (AI interviewer + feedback)  
+- Cloudflare Pages (Hosting + CDN)  
+- Vite (Build tool)  
+
+---
+
+## 📁 Project Structure
+
+```
+proview-ai/
+├── src/
+│   ├── components/
+│   │   ├── ui/                     # shadcn/ui primitives (auto-generated, do not edit)
+│   │   ├── SiteHeader.tsx          # Top navigation bar
+│   │   ├── SiteFooter.tsx          # Footer
+│   │   └── WebcamConfidence.tsx    # Live webcam confidence detection
+│   ├── contexts/
+│   │   └── AuthContext.tsx         # Supabase auth state (sign in, sign up, sign out)
+│   ├── hooks/
+│   │   ├── useSpeechRecognition.ts # Browser Web Speech API (voice input)
+│   │   └── useSpeechSynthesis.ts   # Browser TTS (interviewer speaks)
+│   ├── integrations/
+│   │   └── supabase/
+│   │       ├── client.ts           # Browser Supabase client
+│   │       ├── client.server.ts    # Server-side Supabase client
+│   │       └── types.ts            # Auto-generated DB types
+│   ├── lib/
+│   │   ├── questions.ts            # Aptitude test question bank
+│   │   └── utils.ts                # Tailwind merge utility (cn)
+│   ├── routes/
+│   │   ├── __root.tsx              # HTML shell, SEO meta tags, AuthProvider
+│   │   ├── index.tsx               # Landing page (public)
+│   │   ├── signin.tsx              # Sign in page
+│   │   ├── signup.tsx              # Sign up page
+│   │   ├── _app.tsx                # Authenticated layout (redirect guard)
+│   │   ├── _app.dashboard.tsx      # Dashboard — test & interview history
+│   │   ├── _app.test.tsx           # Aptitude test (timed MCQ)
+│   │   ├── _app.interview.tsx      # AI mock interview + live feedback
+│   │   ├── _app.reports.tsx        # Progress charts & session history
+│   │   └── _app.profile.tsx        # Profile — name, avatar
+│   ├── router.tsx                  # Router instance
+│   ├── routeTree.gen.ts            # Auto-generated by TanStack Router (do not edit)
+│   └── styles.css                  # Global styles + Tailwind + CSS custom properties
+├── superbase/
+│   ├── config.toml                 # Supabase local dev config
+│   ├── functions/
+│   │   ├── interview-chat/
+│   │   │   └── index.ts            # Streaming AI chat (Deno Edge Function)
+│   │   └── interview-feedback/
+│   │       └── index.ts            # Structured feedback via tool calling (Deno Edge Function)
+│   └── migrations/
+│       ├── 20260423...sql          # profiles + test_attempts tables
+│       ├── 20260424...sql          # interview_sessions table
+│       └── 20260425...sql          # avatars storage bucket + RLS policies
+├── public/
+│   ├── robots.txt
+│   └── sitemap.xml
+├── .env.example                    # Environment variable template
+├── package.json
+├── vite.config.ts                  # Vite + TanStack Start config
+├── wrangler.jsonc                  # Cloudflare Workers/Pages config
+├── tsconfig.json
+└── components.json                 # shadcn/ui config
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- npm (v9+)
+- Git
+
+You will also need:
+- Supabase account  
+- Google AI Studio API key  
+- Cloudflare account  
+
+---
+
+### Installation
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/YOUR_USERNAME/proview-ai.git
+cd proview-ai
+```
+
+**2. Install dependencies**
 
 ```bash
 npm install
@@ -34,196 +168,85 @@ npm install
 
 ---
 
-## Step 2: Set Up Environment Variables
+### Environment Variables
+
+**3. Create your `.env` file**
 
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and fill in:
-- `VITE_SUPABASE_URL` — from Supabase Dashboard → Settings → API → Project URL
-- `VITE_SUPABASE_PUBLISHABLE_KEY` — from Supabase Dashboard → Settings → API → anon/public key
-- `SUPABASE_URL` — same as above (used server-side)
-- `SUPABASE_PUBLISHABLE_KEY` — same as above (used server-side)
+**4. Fill in your Supabase credentials**
+
+Open `.env` and set the following values. Find them in your Supabase dashboard under **Settings → API**:
+
+```env
+VITE_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGci...your-anon-key...
+
+SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+SUPABASE_PUBLISHABLE_KEY=eyJhbGci...your-anon-key...
+```
 
 ---
 
-## Step 3: Add Google AI Key to Supabase (CRITICAL)
+## 🗄 Supabase Setup
 
-Your AI interview features need a Google Gemini API key stored securely as a Supabase secret.
+### Database Migrations
 
-1. Go to https://aistudio.google.com/app/apikey → Create API key (free)
-2. Go to Supabase Dashboard → your project → Settings → Edge Functions → Secrets
-3. Click "Add new secret"
-   - Name: `GOOGLE_API_KEY`
-   - Value: your key from step 1
-4. Click Save
+Run the SQL migrations to create the required tables in your Supabase project.
 
-> This key is NEVER sent to the browser. It only lives in the Supabase server environment.
+**Option A — Supabase Dashboard (easiest)**
 
----
+1. Go to your project → **SQL Editor**
+2. Run each migration file in chronological order:
 
-## Step 4: Run Database Migrations
+```
+superbase/migrations/20260423075114_...sql   ← profiles + test_attempts
+superbase/migrations/20260424103934_...sql   ← interview_sessions
+superbase/migrations/20260425054812_...sql   ← avatars storage bucket
+```
 
-Your Supabase project already has these tables if you were using it with Lovable. If starting fresh:
-
-1. Go to Supabase Dashboard → SQL Editor
-2. Run each file in order:
-   - `superbase/migrations/20260423...sql` (profiles + test_attempts tables)
-   - `superbase/migrations/20260424...sql` (interview_sessions table)
-   - `superbase/migrations/20260425...sql` (avatars storage bucket)
-
----
-
-## Step 5: Deploy Supabase Edge Functions
+**Option B — Supabase CLI**
 
 ```bash
-# Install Supabase CLI (if not already installed)
+# Install CLI
 npm install -g supabase
 
 # Login
 supabase login
 
-# Link to your existing project
+# Link to your project
 supabase link --project-ref YOUR_PROJECT_ID
-# (find YOUR_PROJECT_ID in Supabase Dashboard URL: supabase.com/dashboard/project/YOUR_PROJECT_ID)
 
-# Deploy both edge functions
-supabase functions deploy interview-chat --project-ref YOUR_PROJECT_ID
-supabase functions deploy interview-feedback --project-ref YOUR_PROJECT_ID
+# Run all migrations
+supabase db push
 ```
 
----
+The migrations create these tables:
 
-## Step 6: Update Supabase Auth Redirect URLs
+| Table | Purpose |
+|---|---|
+| `profiles` | User display name and avatar URL |
+| `test_attempts` | Aptitude test results per user |
+| `interview_sessions` | Mock interview sessions + AI feedback JSON |
 
-1. Go to Supabase Dashboard → Authentication → URL Configuration
-2. Set **Site URL** to your production domain (e.g. `https://proviewai.com`)
-3. Add to **Redirect URLs**: `https://proviewai.com/**`
-
----
-
-## Step 7: Run Locally
-
-```bash
-npm run dev
-```
-
-Open http://localhost:3000
 
 ---
 
-## Step 8: Deploy to Cloudflare Pages
+## 🗺 Pages & Routes
 
-```bash
-# Build
-npm run build
+| Route | Access | Description |
+|---|---|---|
+| `/` | Public | Landing page with features, testimonials, how-it-works |
+| `/signin` | Public | Email/password sign in |
+| `/signup` | Public | Create a new account |
+| `/dashboard` | Auth required | Overview of recent tests and interviews |
+| `/test` | Auth required | Timed aptitude test (category selection → MCQ → results) |
+| `/interview` | Auth required | AI mock interview with voice, TTS, and webcam confidence |
+| `/reports` | Auth required | Progress charts and full session history |
+| `/profile` | Auth required | Update display name and avatar |
 
-# First deploy (creates the Pages project)
-npx wrangler pages deploy dist --project-name proview-ai
-
-# After first deploy, you can use the shortcut:
-npm run deploy
-```
-
-Or use GitHub auto-deploy:
-1. Push your code to GitHub
-2. Cloudflare Dashboard → Pages → Create a project → Connect to Git
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. Add environment variables (Settings → Environment Variables):
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY`
-   - `SUPABASE_URL`
-   - `SUPABASE_PUBLISHABLE_KEY`
+Unauthenticated users who access any `/dashboard`, `/test`, `/interview`, `/reports`, or `/profile` route are automatically redirected to `/signin`.
 
 ---
-
-## Step 9: Set Up Custom Domain
-
-1. Cloudflare Pages → your project → Custom Domains → Add domain
-2. Enter your domain (e.g. `proviewai.com`)
-3. At your domain registrar, add a CNAME record:
-   ```
-   www   CNAME   proview-ai.pages.dev
-   ```
-4. SSL certificate is auto-provisioned by Cloudflare (free)
-
----
-
-## Alternative: Deploy to Vercel
-
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-Set the same environment variables in the Vercel dashboard under Settings → Environment Variables.
-
----
-
-## Folder Structure
-
-```
-proview-ai/
-├── src/
-│   ├── components/         # Reusable UI components
-│   │   ├── ui/             # shadcn/ui components (DO NOT EDIT)
-│   │   ├── SiteHeader.tsx  # Navigation header
-│   │   ├── SiteFooter.tsx  # Footer
-│   │   └── WebcamCofidence.tsx  # Webcam confidence detection
-│   ├── contexts/
-│   │   └── AuthContext.tsx # Supabase auth state
-│   ├── hooks/              # Custom React hooks
-│   ├── integrations/       # Supabase client + types
-│   ├── lib/
-│   │   ├── questions.ts    # Aptitude test questions
-│   │   └── utils.ts        # Tailwind merge utility
-│   ├── routes/             # TanStack Router file-based routes
-│   │   ├── __root.tsx      # HTML shell + SEO meta
-│   │   ├── index.tsx       # Landing page
-│   │   ├── signin.tsx      # Sign in page
-│   │   ├── signup.tsx      # Sign up page
-│   │   ├── _app.tsx        # Authenticated layout wrapper
-│   │   ├── _app.dashboard.tsx
-│   │   ├── _app.interview.tsx
-│   │   ├── _app.profile.tsx
-│   │   ├── _app.reports.tsx
-│   │   └── _app.test.tsx
-│   ├── router.tsx          # Router instance
-│   ├── routeTree.gen.ts    # Auto-generated (DO NOT EDIT)
-│   └── styles.css          # Tailwind + CSS variables
-├── superbase/
-│   ├── config.toml
-│   ├── functions/
-│   │   ├── interview-chat/index.ts     # AI streaming chat
-│   │   └── interview-feedback/index.ts # AI feedback generation
-│   └── migrations/         # SQL schema files
-├── public/
-│   ├── robots.txt
-│   └── sitemap.xml
-├── .env.example            # Copy to .env and fill in values
-├── package.json
-├── vite.config.ts          # Vite build config
-├── wrangler.jsonc          # Cloudflare Workers config
-└── tsconfig.json
-```
-
----
-
-## Troubleshooting
-
-**`npm run dev` fails with module not found:**
-Run `npm install` again. Make sure `node_modules` exists.
-
-**AI interview not responding:**
-- Check that `GOOGLE_API_KEY` is set in Supabase Edge Function secrets (not in .env)
-- Redeploy the edge functions: `supabase functions deploy interview-chat`
-
-**Auth redirect loop:**
-- Make sure Site URL is set correctly in Supabase Auth settings
-- Make sure your `.env` `VITE_SUPABASE_URL` matches your Supabase project URL
-
-**Build fails with TypeScript errors:**
-- Run `npm run lint` to see specific errors
-- The `routeTree.gen.ts` file is auto-generated — if it's missing, run `npm run dev` once to regenerate it
